@@ -18,13 +18,12 @@ async function main() {
   const rocketToken = await RocketToken.attach(RocketTokenAddress);
   const token0 = RocketTokenAddress > AirplaneTokenAddress ? AirplaneTokenAddress : RocketTokenAddress
   const token1 = RocketTokenAddress > AirplaneTokenAddress ? RocketTokenAddress : AirplaneTokenAddress;
-  //const ExampleOracleSimple = await hre.ethers.deployContract("ExampleOracleSimple", [UniswapV2FactoryAddress, RocketTokenAddress, AirplaneTokenAddress]);
-  //console.log(`ExampleOracleSimple contract address: ${ExampleOracleSimple.target}`);
   
-  console.log(`${deployer.address} APT balance: ${await airplaneToken.balanceOf(deployer.address)}, RT balance: ${await rocketToken.balanceOf(deployer.address)}, balanced ${await hre.ethers.provider.getBalance(deployer.address)}, AirplaneToken contract address: ${airplaneToken.target}, RocketToken contract address: ${rocketToken.target}`);
+  console.log(`${deployer.address} APT balance: ${await airplaneToken.balanceOf(deployer.address)}, RT balance: ${await rocketToken.balanceOf(deployer.address)}, balanced ${await hre.ethers.provider.getBalance(deployer.address)}, AirplaneToken contract address: ${airplaneToken.target}, RocketToken contract address: ${rocketToken.target}, uniswapFactory contract address: ${uniswapFactory.target}, uniswapFactory owner: ${await uniswapFactory.feeTo()}`);
   //process.exit();
 
   const UniswapV2Pair = await hre.ethers.getContractFactory("UniswapV2Pair");
+  console.log(`${ethers.keccak256(UniswapV2Pair.bytecode)}`);
   let pair = "";
   try {
     /*
@@ -57,7 +56,6 @@ async function main() {
   await uniswapV2Pair.mint(deployer.address);
 
   console.log(`${deployer.address} APT balance: ${await airplaneToken.balanceOf(deployer.address)}, RT balance: ${await rocketToken.balanceOf(deployer.address)}, UNI-V2 balance: ${await uniswapV2Pair.balanceOf(deployer.address)}, balanced ${await hre.ethers.provider.getBalance(deployer.address)}, price0CumulativeLast ${await uniswapV2Pair.price0CumulativeLast()}, price1CumulativeLast ${await uniswapV2Pair.price1CumulativeLast()}, kLast ${await uniswapV2Pair.kLast()}`);
-  // console.log(`price0Average ${await exampleOracleSimple.price0Average()._x}, price1Average ${await exampleOracleSimple.price1Average()._x}`);
 }
 
 main()

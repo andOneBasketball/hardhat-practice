@@ -19,3 +19,6 @@ ignition/modules/Lock.js
 
 contracts/Lock.sol
 test/Lock.js
+
+build
+deployments

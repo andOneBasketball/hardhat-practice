@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract RwaToken is ERC20, Ownable {
     uint256 public sharesFactor;
+    event adjustShares(uint256 newSharesFactor);
 
     constructor() ERC20("RWA Token", "RWAT") Ownable(msg.sender) {
         _mint(msg.sender, 1e28);
@@ -21,7 +22,7 @@ contract RwaToken is ERC20, Ownable {
 
     function adjustSharesFactor(uint256 newSharesFactor) external onlyOwner {
         require(newSharesFactor > 0, "Shares factor must be positive");
-
+        emit adjustShares(newSharesFactor);
         sharesFactor = newSharesFactor;
     }
 }

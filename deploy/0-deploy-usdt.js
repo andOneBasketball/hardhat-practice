@@ -25,7 +25,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     console.log(`Token name: ${await contract.name()}, symbol: ${await contract.symbol()}, decimals: ${await contract.decimals()}`);
 
     // Verify the deployment
-    if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+    if (!developmentChains.includes(network.name) && process.env.EVM_SCAN_API_KEY) {
         console.log("Verifying...");
         await verify(usdt.address, []);
     }

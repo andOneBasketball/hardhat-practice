@@ -3,8 +3,7 @@ const { network } = hre;
 const { developmentChains, VERIFICATION_BLOCK_CONFIRMATIONS } = require("../helper-hardhat-config");
 const { verify } = require("../utils/verify");
 
-module.exports = async ({ getNamedAccounts, deployments }) => {
-    const { deploy } = deployments;
+module.exports = async ({ getNamedAccounts }) => {
     const { deployer } = await getNamedAccounts();
 
     const waitBlockConfirmations = developmentChains.includes(network.name) ? 1 : VERIFICATION_BLOCK_CONFIRMATIONS;
@@ -13,22 +12,22 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     // Deployed address, currently all the same for all chains https://docs.tokenbound.org/contracts/deployments
     // This are V2 contracts, check the latest ones that are used here https://docs.tokenbound.org/contracts/deployments
-    const rwaToken = await deploy("RwaToken", {
-        from: deployer,
-        log: true,
-        waitConfirmations: waitBlockConfirmations,
-    });
-    console.log("RwaToken address " + rwaToken.address);
-    const Contract = await hre.ethers.getContractFactory("RwaToken");
-    const contract = await Contract.attach(rwaToken.address);
-    
-    console.log(`Token name: ${await contract.name()}, symbol: ${await contract.symbol()}, decimals: ${await contract.decimals()}`);
+    const CounterUpgrade = await hre.ethers.getContractFactory("CounterUpgrade");
+    const proxy = await hre.upgrades.deployProxy(CounterUpgrade, [777], { initializer: "initialize", signer: deployer });
+    await proxy.waitForDeployment();
+    await proxy.deploymentTransaction().wait(waitBlockConfirmations);
+    const proxyAddress = await proxy.getAddress();
+
+    console.log("Proxy address:", proxyAddress);
+
+    const implAddress = await hre.upgrades.erc1967.getImplementationAddress(proxyAddress);
+    console.log("Implementation address:", implAddress);
 
     // Verify the deployment
     if (!developmentChains.includes(network.name) && process.env.EVM_SCAN_API_KEY) {
         console.log("Verifying...");
-        await verify(rwaToken.address, []);
+        await verify(implAddress, []);
     }
 };
 
-module.exports.tags = ["all", "rwa"];
+module.exports.tags = ["all", "counter_upgrade"];

@@ -27,7 +27,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     // Verify the deployment
     if (!developmentChains.includes(network.name) && process.env.EVM_SCAN_API_KEY) {
         console.log("Verifying...");
-        await verify(usdt.address, []);
+        await verify(usdt.address, [], "contracts/UsdtToken.sol:UsdtToken");
     }
 };
 

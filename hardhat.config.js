@@ -11,6 +11,7 @@ const POL_URL = process.env.POL_URL;
 const SEPOLIA_URL = process.env.SEPOLIA_URL;
 const BSC_TESTNET_URL = process.env.BSC_TESTNET_URL;
 const POLYGON_TEST_URL = process.env.POLYGON_TEST_URL;
+const BASE_SEPOLIA_URL = process.env.BASE_SEPOLIA_URL;
 
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
@@ -99,7 +100,12 @@ module.exports = {
       url: POL_URL,
       accounts: [PRIVATE_KEY],
       chainId: 137
-    }
+    },
+    baseSepolia: {
+      url: BASE_SEPOLIA_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 84532
+    },
   },
   etherscan: {
     // yarn hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
@@ -135,6 +141,14 @@ module.exports = {
         urls: {
           apiURL: "https://api.polygonscan.com/api",
           browserURL: "https://polygonscan.com/"
+        }
+      },
+      {
+        network: "baseSepolia",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://basescan.org/api",
+          browserURL: "https://basescan.org/"
         }
       }
     ]
